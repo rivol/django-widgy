@@ -994,7 +994,7 @@ class FormSubmission(models.Model):
                 form_ident=form.ident,
             )
 
-            for name, field in form.get_fields().iteritems():
+            for name, field in form.get_fields().items():
                 value = field.serialize_value(data[name])
                 submission.values.create(
                     field_node=field.node,
