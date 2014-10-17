@@ -105,9 +105,9 @@ def convert_linkable_to_choice(linkable):
     key = get_composite_key(linkable)
 
     try:
-        value = u'%s (%s)' % (unicode(linkable), linkable.get_absolute_url())
+        value = u'%s (%s)' % (six.text_type(linkable), linkable.get_absolute_url())
     except AttributeError:
-        value = unicode(linkable)
+        value = six.text_type(linkable)
 
     return (key, value)
 

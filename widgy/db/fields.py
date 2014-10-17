@@ -4,6 +4,8 @@ from django.db.models.loading import get_app
 from django.contrib.contenttypes.models import ContentType
 from django.utils.functional import SimpleLazyObject
 
+import six
+
 # WidgyContentType has a patched get_for_models that doesn't ignore proxy
 # models
 from widgy.generic.models import ContentType as WidgyContentType
@@ -16,7 +18,7 @@ add_introspection_rules([], ["^widgy\.db.fields\.VersionedWidgyField"])
 
 
 def get_site(site):
-    if isinstance(site, basestring):
+    if isinstance(site, six.string_types):
         return fancy_import(site)
     else:
         return site

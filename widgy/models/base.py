@@ -7,6 +7,7 @@ from functools import partial
 import logging
 import itertools
 import copy
+import six
 
 from django.db import models
 from django import forms
@@ -70,7 +71,7 @@ class Node(MP_Node):
         unique_together = [('content_type', 'content_id')]
 
     def __unicode__(self):
-        return unicode(self.content)
+        return six.text_type(self.content)
 
     def to_json(self, site):
         children = [c.to_json(site) for c in self.get_children()]
@@ -176,7 +177,7 @@ class Node(MP_Node):
             contents[node.content_type_id].add(node.content_id)
 
         # Convert that mapping to content_types -> Content instances
-        for content_type_id, content_ids in contents.iteritems():
+        for content_type_id, content_ids in six.iteritems(contents):
             try:
                 ct = ContentType.objects.get_for_id(content_type_id)
                 model_class = ct.model_class()
@@ -189,7 +190,7 @@ class Node(MP_Node):
                 ct = ContentType.objects.get(id=content_type_id)
                 contents[content_type_id] = dict((id, UnknownWidget(ct, id)) for id in content_ids)
                 # Warn about using an UnknownWidget. It doesn't matter which instance we use.
-                next(contents[content_type_id].itervalues(), UnknownWidget(ct, None)).warn()
+                next(six.itervalues(contents[content_type_id]), UnknownWidget(ct, None)).warn()
         return contents
 
     @classmethod
@@ -482,7 +483,7 @@ class Content(models.Model):
 
     @property
     def display_name(self):
-        return unicode(self._meta.verbose_name)
+        return six.text_type(self._meta.verbose_name)
 
     @property
     def class_name(self):

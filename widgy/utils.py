@@ -1,10 +1,11 @@
 """
 Some utility functions used throughout the project.
 """
-from itertools import ifilterfalse
 from contextlib import contextmanager
 
 import bs4
+import six
+from six.moves import filterfalse
 
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
@@ -36,7 +37,7 @@ except ImportError:
         small HTML fragments.
         """
         args_safe = map(conditional_escape, args)
-        kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in kwargs.iteritems()])
+        kwargs_safe = dict([(k, conditional_escape(v)) for (k, v) in six.iteritems(kwargs)])
         return mark_safe(format_string.format(*args_safe, **kwargs_safe))
 
 try:
@@ -112,7 +113,7 @@ def html_to_plaintext(html):
             pass
         else:
             for c in node.children:
-                if isinstance(c, unicode):
+                if isinstance(c, six.string_types):
                     if not isinstance(c, bs4.Comment):
                         yield c.strip()
                 elif isinstance(c, bs4.Tag):
@@ -138,7 +139,7 @@ def unique_everseen(iterable, key=None):
     seen = set()
     seen_add = seen.add
     if key is None:
-        for element in ifilterfalse(seen.__contains__, iterable):
+        for element in filterfalse(seen.__contains__, iterable):
             seen_add(element)
             yield element
     else:

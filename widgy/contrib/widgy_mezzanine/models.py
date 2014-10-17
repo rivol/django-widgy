@@ -21,7 +21,7 @@ class WidgyPageMixin(object):
         we need.  We also override this with a real db column in order to do
         translation.
         """
-        return ', '.join(unicode(keyword) for keyword in self.keywords.all())
+        return ', '.join(six.text_type(keyword) for keyword in self.keywords.all())
 
     def get_form_action_url(self, form, widgy):
         return urlresolvers.reverse(

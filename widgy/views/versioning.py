@@ -302,4 +302,4 @@ def daisydiff(before, after):
         body = parsed.find('body')
         for i in body.find_all(recursive=False)[:6]:
             i.extract()
-        return unicode(body)
+        return six.text_type(body)

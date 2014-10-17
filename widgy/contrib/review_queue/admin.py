@@ -128,7 +128,7 @@ class VersionCommitAdminBase(AuthorizedAdminMixin, ModelAdmin):
             "We rely on the VersionCommitChangeList to set commit.tracker"
             " to a ReviewedVersionTracker."
         )
-        return ', '.join(unicode(owner) for owner in commit.tracker.owners)
+        return ', '.join(six.text_type(owner) for owner in commit.tracker.owners)
     commit_name.short_description = _("Commit name")
 
     def commit_preview(self, commit):

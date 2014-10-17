@@ -23,6 +23,7 @@ from django.core.files.storage import default_storage
 
 from django_extensions.db.fields import UUIDField
 import html2text
+import six
 
 from widgy.models import Content, Node
 from widgy.signals import pre_delete_widget
@@ -681,7 +682,7 @@ class FormField(StrDisplayNameMixin, BaseFormField):
         to store in the db. The return value with also be used in the
         CSV download of form data.
         """
-        return unicode(value)
+        return six.text_type(value)
 
     @property
     def widget_attrs(self):
