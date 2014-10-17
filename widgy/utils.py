@@ -15,6 +15,7 @@ from django.db import models
 from django.db.models import query
 from django.utils.http import urlencode
 from django.utils.functional import memoize
+from django.utils.module_loading import import_by_path
 from django.conf import settings
 
 try:
@@ -82,9 +83,7 @@ def fancy_import(name):
     This takes a fully qualified object name, like 'accounts.models.ProxyUser'
     and turns it into the accounts.models.ProxyUser object.
     """
-    import_path, import_me = name.rsplit('.', 1)
-    imported = __import__(import_path, globals(), locals(), [import_me], -1)
-    return getattr(imported, import_me)
+    return import_by_path(name)
 
 
 @contextmanager
