@@ -2,6 +2,8 @@ import copy
 from operator import or_
 import itertools
 
+import six
+
 from django.db import models
 from django.db.models.fields import Field
 from django.contrib.contenttypes.models import ContentType
