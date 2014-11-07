@@ -274,32 +274,34 @@ def daisydiff(before, after):
     Given two strings of html documents in a and b, return a string containing
     html representing the diff between a and b. Requires java and daisydiff.
     """
-    files = [tempfile.NamedTemporaryFile() for i in range(3)]
-    with contextlib.nested(*files) as (f_a, f_b, f_out):
-        f_a.write(before.encode('utf-8'))
-        f_b.write(after.encode('utf-8'))
+    # Ugly, due to support for both Python 2.6 and 3.4
+    with tempfile.NamedTemporaryFile() as f_a:
+        with tempfile.NamedTemporaryFile() as f_b:
+            with tempfile.NamedTemporaryFile() as f_out:
+                f_a.write(before.encode('utf-8'))
+                f_b.write(after.encode('utf-8'))
 
-        f_a.flush()
-        f_b.flush()
+                f_a.flush()
+                f_b.flush()
 
-        proc = subprocess.Popen(stdout=subprocess.PIPE, args=[
-            'java',
-            '-jar',
-            settings.DAISYDIFF_JAR_PATH,
-            f_b.name,
-            f_a.name,
-            '--file=' + f_out.name,
-        ])
-        proc.communicate()
-        retcode = proc.poll()
-        if retcode:
-            assert False, "Daisydiff returned %s" % retcode
+                proc = subprocess.Popen(stdout=subprocess.PIPE, args=[
+                    'java',
+                    '-jar',
+                    settings.DAISYDIFF_JAR_PATH,
+                    f_b.name,
+                    f_a.name,
+                    '--file=' + f_out.name,
+                ])
+                proc.communicate()
+                retcode = proc.poll()
+                if retcode:
+                    assert False, "Daisydiff returned %s" % retcode
 
-        diff_html = f_out.read().decode('utf-8')
+                diff_html = f_out.read().decode('utf-8')
 
-        # remove the daisydiff chrome so we can add our own
-        parsed = BeautifulSoup(diff_html)
-        body = parsed.find('body')
-        for i in body.find_all(recursive=False)[:6]:
-            i.extract()
-        return six.text_type(body)
+                # remove the daisydiff chrome so we can add our own
+                parsed = BeautifulSoup(diff_html)
+                body = parsed.find('body')
+                for i in body.find_all(recursive=False)[:6]:
+                    i.extract()
+                return six.text_type(body)

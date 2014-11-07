@@ -77,7 +77,7 @@ class TestPGFK(TestCase):
 
     def test_proxy_contenttype(self):
         self.assertEqual(Proxy, ContentType.objects.get_for_model(Proxy, for_concrete_model=False).model_class())
-        self.assertEqual(Proxy, ContentType.objects.get_for_models(Proxy, for_concrete_models=False).values()[0].model_class())
+        self.assertEqual(Proxy, list(ContentType.objects.get_for_models(Proxy, for_concrete_models=False).values())[0].model_class())
 
     @unittest.skipIf(django.VERSION < (1, 6, 0), 'only works on 1.6')
     def test_abstract_reverse_join(self):

@@ -3,6 +3,7 @@ from operator import or_
 import itertools
 
 import six
+from six.moves import reduce
 
 from django.db import models
 from django.db.models.fields import Field

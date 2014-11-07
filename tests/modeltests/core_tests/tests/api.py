@@ -45,7 +45,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
         })
 
         self.assertEqual(new_child.status_code, 201)
-        new_child = json.loads(new_child.content)['node']
+        new_child = json.loads(new_child.content.decode('utf-8'))['node']
         self.assertEqual(new_child['parent_id'], bucket['url'])
         self.assertEqual(new_child['content']['__class__'], 'core_tests.rawtextwidget')
 
@@ -58,7 +58,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
 
         r = self.get(new_child['content']['url'])
         self.assertEqual(r.status_code, 200)
-        textcontent = json.loads(r.content)
+        textcontent = json.loads(r.content.decode('utf-8'))
         self.assertEqual(textcontent['attributes']['text'], 'foobar')
 
         # move the node to the other bucket
@@ -76,7 +76,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
         resp = self.put(url, data)
         self.assertEqual(resp.status_code, 409)
         # validation error for field name
-        self.assertIn('text', json.loads(resp.content))
+        self.assertIn('text', json.loads(resp.content.decode('utf-8')))
 
     def test_delete(self):
         left, right = make_a_nice_tree(self.root_node, self.widgy_site)
@@ -109,7 +109,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
         subbucket = list(left.get_children())[-1]
         resp = self.get(self.root_node.to_json(self.widgy_site)['available_children_url'])
         self.assertEqual(resp.status_code, 200)
-        data = json.loads(resp.content)
+        data = json.loads(resp.content.decode('utf-8'))
 
         def select(cls_name):
             possible_parent_urls = []
@@ -176,17 +176,17 @@ class TestApi(RootNodeTestCase, HttpTestCase):
         left, right = make_a_nice_tree(self.root_node, self.widgy_site)
 
         resp = self.get(self.root_node.to_json(self.widgy_site)['possible_parents_url'])
-        possible_parents = json.loads(resp.content)
+        possible_parents = json.loads(resp.content.decode('utf-8'))
         order_ignorant_equals([], possible_parents)
 
         resp = self.get(left.to_json(self.widgy_site)['possible_parents_url'])
-        possible_parents = json.loads(resp.content)
+        possible_parents = json.loads(resp.content.decode('utf-8'))
         order_ignorant_equals([right.get_api_url(self.widgy_site),
                                self.root_node.get_api_url(self.widgy_site)],
                               possible_parents)
 
         resp = self.get(right.to_json(self.widgy_site)['possible_parents_url'])
-        possible_parents = json.loads(resp.content)
+        possible_parents = json.loads(resp.content.decode('utf-8'))
         order_ignorant_equals([left.get_api_url(self.widgy_site),
                                self.root_node.get_api_url(self.widgy_site),
                                left.content.get_children()[2].node.get_api_url(self.widgy_site)],
@@ -194,7 +194,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
 
         resp = self.get(
             left.content.get_children()[0].node.to_json(self.widgy_site)['possible_parents_url'])
-        possible_parents = json.loads(resp.content)
+        possible_parents = json.loads(resp.content.decode('utf-8'))
         order_ignorant_equals([left.get_api_url(self.widgy_site),
                                right.get_api_url(self.widgy_site),
                                left.content.get_children()[2].node.get_api_url(self.widgy_site)],
@@ -211,8 +211,8 @@ class TestApi(RootNodeTestCase, HttpTestCase):
 
         def doit(method, *args):
             url = '{0}?include_compatibility_for={1}'.format(left_url, root_url)
-            ret = json.loads(getattr(self, method)(url, *args).content)
-            compatibility = json.loads(self.get(root_json['available_children_url']).content)
+            ret = json.loads(getattr(self, method)(url, *args).content.decode('utf-8'))
+            compatibility = json.loads(self.get(root_json['available_children_url']).content.decode('utf-8'))
 
             if method == 'get':
                 self.assertEqual(left_json, ret['node'])
@@ -242,7 +242,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
         r = self.get(left.content.to_json(self.widgy_site)['template_url'])
 
         # not sure there's much else we can test here
-        self.assertIn('<form', json.loads(r.content)['edit_template'])
+        self.assertIn('<form', json.loads(r.content.decode('utf-8'))['edit_template'])
 
     def test_editable_toggles_existence_of_edit_url(self):
         self.root_node.content.editable = True
@@ -329,7 +329,7 @@ class PermissionsTest(SwitchUserTestCase, RootNodeTestCase, HttpTestCase):
         def win():
             resp = doit()
             self.assertEqual(resp.status_code, 200)
-            data = json.loads(resp.content)
+            data = json.loads(resp.content.decode('utf-8'))
             self.assertCompatibilityContains('core_tests.bucket', data)
 
         fail()  # not logged in
@@ -337,13 +337,13 @@ class PermissionsTest(SwitchUserTestCase, RootNodeTestCase, HttpTestCase):
         with self.logged_in() as user:
             resp = doit()  # not staff
             self.assertEqual(resp.status_code, 200)
-            data = json.loads(resp.content)
+            data = json.loads(resp.content.decode('utf-8'))
             self.assertEqual(data, {self.root_node.get_api_url(self.widgy_site): []})
 
         with self.as_staffuser() as user:
             resp = doit()  # staff, no permissions
             self.assertEqual(resp.status_code, 200)
-            data = json.loads(resp.content)
+            data = json.loads(resp.content.decode('utf-8'))
             self.assertCompatibilityNotContains('core_tests.bucket', data)
 
         with self.as_staffuser() as user:
@@ -421,7 +421,7 @@ class PermissionsTest(SwitchUserTestCase, RootNodeTestCase, HttpTestCase):
             self.assertEqual(list(Layout.objects.get().get_children()),
                              [right, left])
 
-            node_data = json.loads(resp.content)['node']
+            node_data = json.loads(resp.content.decode('utf-8'))['node']
             self.assertEqual(node_data['right_id'], data['right_id'])
             self.assertEqual(node_data['parent_id'], data['parent_id'])
 
@@ -522,7 +522,7 @@ class PermissionsTest(SwitchUserTestCase, RootNodeTestCase, HttpTestCase):
         def win():
             resp = doit()
             self.assertEqual(resp.status_code, 200)
-            self.assertEqual(json.loads(resp.content), [self.root_node.get_api_url(self.widgy_site)])
+            self.assertEqual(json.loads(resp.content.decode('utf-8')), [self.root_node.get_api_url(self.widgy_site)])
 
         self.as_different_types_of_user(('change', PickyBucket), fail, win)
 

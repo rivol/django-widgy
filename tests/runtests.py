@@ -141,7 +141,7 @@ def setup(verbosity, test_labels):
     # easy_thumbnails changes how it does migrations
     import easy_thumbnails
 
-    if easy_thumbnails.VERSION >= 2:
+    if int(easy_thumbnails.VERSION[0]) >= 2:
         SOUTH_MIGRATION_MODULES = {
             'easy_thumbnails': 'easy_thumbnails.south_migrations',
         }
@@ -224,7 +224,7 @@ if __name__ == "__main__":
     options, args = parser.parse_args()
     if not args:
         # apps to test
-        args = map(itemgetter(1), get_test_modules()) + ['widgy']
+        args = list(map(itemgetter(1), get_test_modules())) + ['widgy']
     if options.settings:
         os.environ['DJANGO_SETTINGS_MODULE'] = options.settings
     elif "DJANGO_SETTINGS_MODULE" not in os.environ:
