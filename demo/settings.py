@@ -157,7 +157,7 @@ WIDGY_ROOT = imp.find_module('widgy')[1]
 COMPRESS_ENABLED = True
 
 COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_pyscss.compressor.DjangoScssFilter'),
+    ('text/x-scss', 'django_libsass.SassCompiler'),
 )
 
 INTERNAL_IPS = (

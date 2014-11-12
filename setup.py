@@ -18,7 +18,7 @@ install_requires = [
     'django-treebeard',
     'django-filer>=0.9.6',
     'South',
-    'django-pyscss',
+    'django-libsass>=0.2',
     'six',
     'bleach',
     'django-compressor>=1.3',

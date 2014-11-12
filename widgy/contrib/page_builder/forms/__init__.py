@@ -1,13 +1,11 @@
-import os
-
 from django import forms
 from django.utils.safestring import mark_safe
+from django.contrib.staticfiles import finders
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.template.loader import render_to_string
-from django.conf import settings
 
 import bleach
-from django_pyscss.scss import DjangoScss
+from django_libsass import compile
 
 
 PAGEDOWN_EDITOR_TEMPLATE = u'''
@@ -18,9 +16,8 @@ PAGEDOWN_EDITOR_TEMPLATE = u'''
 
 
 def scss_compile(scss_filename):
-    scss = DjangoScss()
-    css_content = scss.compile(scss_file=scss_filename)
-    return css_content
+    absolute_filename = finders.find(scss_filename)
+    return compile(filename=absolute_filename)
 
 
 class MarkdownWidget(forms.Textarea):
@@ -77,7 +74,7 @@ class CKEditorWidget(forms.Textarea):
         'extraPlugins': 'justify',
         'justifyClasses': ['align-left', 'align-center', 'align-right', 'align-justify'],
         'indentClasses': ['text-indent-%d' % i for i in range(1,6)],
-        'contentsCss': scss_compile('/widgy/page_builder/html.scss'),
+        'contentsCss': scss_compile('widgy/page_builder/html.scss'),
     }
 
     def __init__(self, *args, **kwargs):
@@ -145,7 +142,7 @@ class MiniCKEditorWidget(CKEditorWidget):
             {'name': 'mode', 'groups': ['mode'], 'items': ['Source']},
             {'name': 'editing', 'groups': ['find', 'selection', 'spellchecker'], 'items': ['Scayt']},
         ],
-        'contentsCss': scss_compile('/widgy/page_builder/html.scss')
+        'contentsCss': scss_compile('widgy/page_builder/html.scss')
     }
 
 

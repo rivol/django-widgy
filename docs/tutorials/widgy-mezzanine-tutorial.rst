@@ -38,7 +38,6 @@ add required Widgy apps to ``INSTALLED_APPS``::
         'easy_thumbnails',
         'compressor',
         'argonauts',
-        'scss',
         'sorl.thumbnail',
         'south',
 
@@ -109,14 +108,14 @@ Configure django-compressor::
     COMPRESS_ENABLED = True
 
     COMPRESS_PRECOMPILERS = (
-        ('text/x-scss', 'django_pyscss.compressor.DjangoScssFilter'),
+        ('text/x-scss', 'django_libsass.SassCompiler'),
     )
 
 .. note::
 
     Widgy requires that django-compressor be configured with a precompiler
-    for ``text/x-scss``.  Widgy uses the django-pyscss_ package for easily
-    integrating the pyScss_ library with Django.
+    for ``text/x-scss``.  Widgy uses the django-libsass_ package for easily
+    integrating the libsass_ library with Django.
 
 .. note::
 
@@ -209,8 +208,8 @@ then set ``URLCONF_INCLUDE_CHOICES`` to a list of allowed urlpatterns. For examp
     )
 
 
-.. _django-pyscss: https://github.com/fusionbox/django-pyscss
-.. _pyScss: https://github.com/Kronuz/pyScss
+.. _django-libsass: https://github.com/torchbox/django-libsass
+.. _libsass: https://github.com/dahlia/libsass-python
 
 Adding Widgy to Mezzanine
 -------------------------
