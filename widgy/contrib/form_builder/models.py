@@ -442,7 +442,7 @@ def friendly_uuid(uuid):
     A shortend version of a UUID to use when collisions are acceptable.
     The returned string will have 40 bits of entropy assuming a UUID4.
     """
-    result = base64.b32encode(hashlib.sha1(str(uuid)).digest()[:5]).lower()
+    result = base64.b32encode(hashlib.sha1(str(uuid).encode('utf-8')).digest()[:5]).lower().decode('ascii')
     # avoid accidental profanity
     return result.replace('e', '0').replace('o', '1').replace('u', '8').replace('i', '9')
 
