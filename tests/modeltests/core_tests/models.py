@@ -262,3 +262,12 @@ class ReviewedVersionedPage(models.Model):
 # different apps.
 class Button(Content):
     pass
+
+
+class VerboseNameLayout(Content):
+    pass
+
+
+class VerboseNameLayoutChild(VerboseNameLayout):
+    class Meta:
+        verbose_name = 'Foobar'
