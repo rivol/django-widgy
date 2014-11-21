@@ -19,6 +19,7 @@ from django.contrib.admin.widgets import AdminSplitDateTime
 from django.http import Http404
 
 from bs4 import BeautifulSoup
+import six
 
 from widgy.views.base import AuthorizedMixin
 from widgy.utils import build_url

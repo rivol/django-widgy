@@ -113,7 +113,7 @@ class TestApi(RootNodeTestCase, HttpTestCase):
 
         def select(cls_name):
             possible_parent_urls = []
-            for node_url, child_classes in data.iteritems():
+            for node_url, child_classes in data.items():
                 for i in child_classes:
                     if i['__class__'] == cls_name:
                         possible_parent_urls.append(node_url)
@@ -256,8 +256,8 @@ class TestApi(RootNodeTestCase, HttpTestCase):
         self.assertEqual(r.status_code, 200)
 
         # this is a template view, so there's not much we can test.
-        self.assertIn('new Widgy', r.content)
-        self.assertIn(urlresolvers.reverse(self.widgy_site.node_view), r.content)
+        self.assertIn('new Widgy', r.content.decode('utf-8'))
+        self.assertIn(urlresolvers.reverse(self.widgy_site.node_view), r.content.decode('utf-8'))
 
     def test_node_404(self):
         left, right = make_a_nice_tree(self.root_node, self.widgy_site)
