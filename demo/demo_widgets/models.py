@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 import widgy
@@ -14,6 +15,7 @@ class AcceptsSimpleHtmlChildrenMixin(object):
         return issubclass(cls, (Html, Button))
 
 
+@python_2_unicode_compatible
 @widgy.register
 class Slide(StrDisplayNameMixin, AcceptsSimpleHtmlChildrenMixin, Content):
     tagline = models.CharField(_('tagline'), max_length=255)
@@ -21,7 +23,7 @@ class Slide(StrDisplayNameMixin, AcceptsSimpleHtmlChildrenMixin, Content):
 
     editable = True
 
-    def __unicode__(self):
+    def __str__(self):
         return self.tagline
 
     @classmethod
@@ -39,13 +41,14 @@ class Slideshow(Content):
         return issubclass(cls, Slide)
 
 
+@python_2_unicode_compatible
 @widgy.register
 class Box(StrDisplayNameMixin, AcceptsSimpleHtmlChildrenMixin, Content):
     title = models.CharField(verbose_name=_('title'), max_length=255)
 
     editable = True
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     @classmethod

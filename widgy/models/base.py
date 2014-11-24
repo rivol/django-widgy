@@ -16,6 +16,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.template import RequestContext
 from django.contrib.admin import widgets
 from django.template.defaultfilters import capfirst
+from django.utils.encoding import python_2_unicode_compatible
 
 from treebeard.mp_tree import MP_Node
 
@@ -45,6 +46,7 @@ FORMFIELD_FOR_DBFIELD_DEFAULTS = {
 }
 
 
+@python_2_unicode_compatible
 class Node(MP_Node):
     """
     Instances of this class maintain the Materialized Path tree structure that
@@ -70,7 +72,7 @@ class Node(MP_Node):
         app_label = 'widgy'
         unique_together = [('content_type', 'content_id')]
 
-    def __unicode__(self):
+    def __str__(self):
         return six.text_type(self.content)
 
     def to_json(self, site):

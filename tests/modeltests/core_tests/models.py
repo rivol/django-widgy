@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from widgy.models import Content
@@ -41,10 +42,11 @@ class Bucket(Content):
         verbose_name = _("bucket")
 
 
+@python_2_unicode_compatible
 class RawTextWidget(Content):
     text = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
 
     def render(self, context):
@@ -203,11 +205,12 @@ class ForeignKeyWidget(Content):
 registry.register(ForeignKeyWidget)
 
 
+@python_2_unicode_compatible
 @links.register
 class LinkableThing(models.Model):
     name = models.CharField(max_length=255, default='')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
