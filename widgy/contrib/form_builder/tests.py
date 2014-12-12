@@ -12,7 +12,7 @@ from django.db import connection
 from django.core.files.base import ContentFile
 
 import mock
-from six import StringIO
+from six import BytesIO
 
 from modeltests.core_tests.widgy_config import widgy_site
 from widgy.contrib.form_builder.forms import PhoneNumberField
@@ -234,8 +234,8 @@ class TestForm(TestCase):
         letters_dict, numbers_dict = list(FormSubmission.objects.as_ordered_dictionaries(field_name_order))
 
         self.assertEqual(list(letters_dict.keys()), field_name_order)
-        self.assertEqual(letters_dict.values(), [first, 'c', 'a', 'b'])
-        self.assertEqual(numbers_dict.values(), [second, '3', '1', '2'])
+        self.assertEqual(list(letters_dict.values()), [first, 'c', 'a', 'b'])
+        self.assertEqual(list(numbers_dict.values()), [second, '3', '1', '2'])
 
     def test_parent_form(self):
         for field in self.fields:
@@ -299,12 +299,12 @@ class TestForm(TestCase):
         with mock_now() as now:
             self.submit('\N{SNOWMAN}', '2', '3')
 
-        csv_output = StringIO()
+        csv_output = BytesIO()
         self.form.submissions.to_csv(csv_output)
 
         self.assertEqual(csv_output.getvalue(), (
-            "Created at,\N{INTERROBANG},field 2,field 3\r\n"
-            "%s,\N{SNOWMAN},2,3\r\n" % (now,))
+            b"Created at,\N{INTERROBANG},field 2,field 3\r\n"
+            b"%s,\N{SNOWMAN},2,3\r\n" % (now,))
         )
 
 

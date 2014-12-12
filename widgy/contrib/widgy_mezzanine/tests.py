@@ -63,6 +63,9 @@ def make_reviewed(fn):
     because on a normal run, you are never going to be changing what models a
     ForeignKey points to (I would hope).
     """
+    if not REVIEW_QUEUE_INSTALLED:
+        return
+
     from widgy.contrib.widgy_mezzanine.admin import publish_page_on_approve
 
     site = reviewed_widgy_site
@@ -402,6 +405,7 @@ class TestAdminButtons(TestAdminButtonsBase, TestCase):
         self.assertIn('Publish Changes', response.content.decode('utf-8'))
 
 
+@skipUnless(REVIEW_QUEUE_INSTALLED, 'review_queue is not installed')
 @make_reviewed
 class TestAdminButtonsWhenReviewed(TestAdminButtonsBase, TestCase):
     def test_save_and_commit(self):

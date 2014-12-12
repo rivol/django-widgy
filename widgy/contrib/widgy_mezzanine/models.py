@@ -5,6 +5,7 @@ from django.core import urlresolvers
 
 from mezzanine.pages.managers import PageManager
 from mezzanine.pages.models import Link
+import six
 
 from widgy.utils import SelectRelatedManager
 from widgy.models import links

@@ -56,6 +56,7 @@ ALWAYS_INSTALLED_APPS = [
     # blog is affected by https://code.djangoproject.com/ticket/12728
     # "mezzanine.blog",
     "widgy",
+    "widgy.contrib.page_builder",
     "treebeard",
     "compressor",
     "argonauts",
