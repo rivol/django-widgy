@@ -57,6 +57,7 @@ ALWAYS_INSTALLED_APPS = [
     # "mezzanine.blog",
     "widgy",
     "widgy.contrib.page_builder",
+    "modeltests.core_tests",
     "treebeard",
     "compressor",
     "argonauts",
